@@ -25,6 +25,8 @@ use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PostResource\RelationManagers;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 
 class PostResource extends Resource
 {
@@ -36,31 +38,62 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')->required(),
-                TextInput::make('slug')->required(),
-                Select::make('category_id')
-                    ->label('Category')
-                    ->options(Category::all()
-                    ->pluck('name','id')),
-                ColorPicker::make('color')->required(),
-                MarkdownEditor::make('content')->required(),
-                FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
-                TagsInput::make('tags')->required(),
-                Checkbox::make('published')->required(),
-            ]);
+                Section::make('Create A Post')
+                ->collapsible()
+                ->description('Hello Create here your post')
+                ->schema([
+                    TextInput::make('title')->rules('min:3|max:5')->required(),
+                    TextInput::make('slug')->required(),
+                    Select::make('category_id')
+                        ->label('Category')
+                        ->options(Category::all()
+                        ->pluck('name','id')),
+                    ColorPicker::make('color')->required(),
+                    MarkdownEditor::make('content')->required()->columnSpanFull(),
+                ])->columnSpan(2)->columns(2),
+                Group::make()->schema([
+                            Section::make('Meta')
+                        ->description('Meata Post')
+                        ->collapsible()
+                        ->schema([
+                            FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
+                            
+                        ])->columnSpan(1),
+                            TagsInput::make('tags')->required(),
+                            Checkbox::make('published'),
+                ])
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail'),
-                ColorColumn::make('color'),
-                TextColumn::make('title'),
-                TextColumn::make('slug'),
-                TextColumn::make('category.name'),
-                TextColumn::make('tags'),
-                CheckboxColumn::make('published'),
+                TextColumn::make('id')
+                ->sortable()
+                ->searchable()
+                ->toggleable(isToggledHiddenByDefault:true),
+                ImageColumn::make('thumbnail')
+                ->toggleable(),
+                ColorColumn::make('color')
+                ->toggleable(),
+                TextColumn::make('title')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+                TextColumn::make('slug')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+                TextColumn::make('category.name')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+                TextColumn::make('tags')
+                ->toggleable(),
+                CheckboxColumn::make('published')
+                ->toggleable(),
+                TextColumn::make('created_at')->label('Published On')->sortable()
 
 
             ])
@@ -69,6 +102,7 @@ class PostResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
