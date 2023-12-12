@@ -54,10 +54,10 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('thumbnail'),
+                ColorColumn::make('color'),
                 TextColumn::make('title'),
                 TextColumn::make('slug'),
-                ColorColumn::make('color'),
-                ImageColumn::make('thumbnail'),
                 TextColumn::make('category.name'),
                 TextColumn::make('tags'),
                 CheckboxColumn::make('published'),
