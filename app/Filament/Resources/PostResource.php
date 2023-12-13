@@ -46,22 +46,31 @@ class PostResource extends Resource
                     TextInput::make('slug')->required(),
                     Select::make('category_id')
                         ->label('Category')
-                        ->options(Category::all()
-                        ->pluck('name','id')),
+                        ->relationship('category','name')
+                        ->searchable(),
                     ColorPicker::make('color')->required(),
                     MarkdownEditor::make('content')->required()->columnSpanFull(),
-                ])->columnSpan(2)->columns(2),
-                Group::make()->schema([
-                            Section::make('Meta')
-                        ->description('Meata Post')
-                        ->collapsible()
-                        ->schema([
-                            FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
-                            
-                        ])->columnSpan(1),
-                            TagsInput::make('tags')->required(),
-                            Checkbox::make('published'),
-                ])
+                    ])->columnSpan(2)->columns(2),
+                    Group::make()->schema([
+                                Section::make('Meta')
+                                    ->description('Meata Post')
+                                    ->collapsible()
+                                    ->schema([
+                                        FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
+
+                                ])->columnSpan(1),
+                                Section::make('Meta2')
+                                ->schema([
+                                    TagsInput::make('tags')->required(),
+                                    Checkbox::make('published'),
+
+                                ]),
+                            Section::make('Authors')->schema([
+                                Select::make('authors')
+                                ->multiple()
+                                ->relationship('authors','name')
+                            ])
+                    ])
             ])->columns(3);
     }
 
