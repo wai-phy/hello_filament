@@ -25,6 +25,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use App\Filament\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PostResource\RelationManagers;
+use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 
@@ -42,7 +43,7 @@ class PostResource extends Resource
                 ->collapsible()
                 ->description('Hello Create here your post')
                 ->schema([
-                    TextInput::make('title')->rules('min:3|max:5')->required(),
+                    TextInput::make('title')->rules('min:3|max:15')->required(),
                     TextInput::make('slug')->required(),
                     Select::make('category_id')
                         ->label('Category')
@@ -65,11 +66,12 @@ class PostResource extends Resource
                                     Checkbox::make('published'),
 
                                 ]),
-                            Section::make('Authors')->schema([
-                                Select::make('authors')
-                                ->multiple()
-                                ->relationship('authors','name')
-                            ])
+                            // Section::make('Authors')->schema([
+                            //     Select::make('authors')
+                            //     ->label('Co Authors')
+                            //     ->multiple()
+                            //     ->relationship('authors','name')
+                            // ])
                     ])
             ])->columns(3);
     }
@@ -121,7 +123,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AuthorsRelationManager::class
         ];
     }
 
