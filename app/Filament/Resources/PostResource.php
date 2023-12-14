@@ -32,6 +32,8 @@ use App\Filament\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
+use App\Filament\Resources\PostResource\RelationManagers\CommentsRelationManager;
+use Egulias\EmailValidator\Result\Reason\CommentsInIDRight;
 use Filament\Tables\Filters\TernaryFilter;
 
 class PostResource extends Resource
@@ -167,7 +169,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            AuthorsRelationManager::class
+            AuthorsRelationManager::class,
+            CommentsRelationManager::class
         ];
     }
 

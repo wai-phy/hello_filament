@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Post;
+use App\Models\Comment;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -47,5 +48,9 @@ class User extends Authenticatable
     public function posts():BelongsToMany
     {
         return $this->belongsToMany(Post::class,'post_user')->withPivot(['order'])->withTimestamps();
+    }
+
+    public function comments(){
+        return $this->morphMany(Comment::class,'commentable');
     }
 }
