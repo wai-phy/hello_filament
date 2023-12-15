@@ -40,9 +40,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id'),
-                TextColumn::make('name'),
-                TextColumn::make('email'),
+                TextColumn::make('id')
+                ->sortable()
+                ->searchable(),
+                TextColumn::make('name')
+                ->sortable()
+                ->searchable(),
+                TextColumn::make('email')
+                ->sortable()
+                ->searchable(),
             ])
             ->filters([
                 //
